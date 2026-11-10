@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Help-Desk Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f4f8;--card:#fff;--text:#1d2339;--muted:#6a7089;--line:#e3e5ee;--side:#1f2a44;--ac:#5b6fb5;--ac-soft:#eceffa;--open:#5f93c0;--prog:#c9a255;--done:#5aa08f;--low:#5aa08f;--med:#c9a255;--high:#c4707c;--sh:0 2px 10px rgba(30,40,80,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141f;--card:#1b1e2e;--text:#e8eaf5;--muted:#9296b3;--line:#2b2f45;--side:#0d0f19;--ac:#8b9ce0;--ac-soft:#262b45;--sh:none}}
+:root[data-theme="dark"]{--bg:#12141f;--card:#1b1e2e;--text:#e8eaf5;--muted:#9296b3;--line:#2b2f45;--side:#0d0f19;--ac:#8b9ce0;--ac-soft:#262b45;--sh:none}
+*{box-sizing:border-box;font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--side);color:#cfd4ea;padding:24px 16px;display:flex;flex-direction:column;gap:6px}
+.brand{color:#fff;font-weight:700;font-size:1.1rem;padding:0 10px 18px}
+.nav{background:none;border:0;color:inherit;text-align:left;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+.nav:hover{background:rgba(255,255,255,.07)}
+.nav.on{background:rgba(255,255,255,.14);color:#fff;font-weight:600}
+.nav span{font-size:.75rem;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:99px}
+.side-h{font-size:.75rem;color:#8e95b5;padding:16px 12px 4px}
+section.main{padding:24px 28px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.top h1{margin:0;font-size:1.4rem}
+.top p{margin:3px 0 0;color:var(--muted);font-size:.88rem}
+.tools{display:flex;gap:10px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 16px;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer}
+.btn:hover{border-color:var(--ac)}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.pri:hover{filter:brightness(1.08)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,tr:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--k);border-radius:10px;padding:14px 18px;box-shadow:var(--sh)}
+.kpi small{color:var(--muted);font-size:.8rem;font-weight:600}
+.kpi b{display:block;font-size:1.7rem;margin-top:2px}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh)}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.card-h h2{margin:0;font-size:1rem}
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font-size:.88rem}
+.card-h input{width:200px}
+.tabs{display:flex;gap:4px;padding:10px 18px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{border:0;background:none;color:var(--muted);padding:6px 12px;border-radius:6px;font-weight:600;font-size:.82rem;cursor:pointer;white-space:nowrap}
+.tab.on{background:var(--ac-soft);color:var(--ac)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:.78rem;padding:10px 18px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 18px;border-bottom:1px solid var(--line)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--ac-soft)}
+tbody tr.sel{background:var(--ac-soft);box-shadow:inset 3px 0 0 var(--ac)}
+td b{font-weight:600}
+.muted{color:var(--muted)}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.74rem;font-weight:600;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c);white-space:nowrap}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px}
+.empty{text-align:center;color:var(--muted);padding:50px 20px;font-size:.9rem}
+.body{padding:18px}
+.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0}
+.meta div{font-size:.84rem}
+.meta small{display:block;color:var(--muted);font-size:.75rem;margin-bottom:2px}
+.desc{background:var(--bg);border-radius:8px;padding:12px 14px;font-size:.88rem;line-height:1.55;margin-bottom:16px}
+h3{font-size:.88rem;margin:0 0 10px}
+.stream{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;max-height:230px;overflow:auto}
+.msg{padding:10px 13px;border-radius:10px;font-size:.86rem;line-height:1.45;background:var(--bg);max-width:88%}
+.msg.a{background:var(--ac-soft);align-self:flex-end}
+.msg small{display:block;color:var(--muted);font-size:.72rem;margin-bottom:2px}
+textarea{min-height:70px;resize:vertical;margin-bottom:10px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.row select{width:auto}
+.alert{display:none;background:#fbecee;border:1px solid #e2a3ab;color:#8a3340;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:.85rem}
+dialog{border:0;border-radius:14px;padding:0;width:min(440px,92vw);background:var(--card);color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(15,20,40,.5)}
+dialog form{padding:22px}
+dialog h2{margin:0 0 16px;font-size:1.1rem}
+.f{margin-bottom:12px}
+.f label{display:block;font-size:.8rem;font-weight:600;margin-bottom:5px}
+.toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--side);color:#fff;padding:11px 16px;border-radius:8px;font-size:.88rem;opacity:0;transform:translateY(12px);transition:.25s;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+@media(max-width:1100px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.app{grid-template-columns:1fr}aside{flex-direction:row;flex-wrap:wrap;padding:12px}.brand{padding:6px 10px;width:100%}.side-h{display:none}section.main{padding:18px 14px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand">🎧 Help-Desk Pro</div>
+  <div class="side-h">Queues</div>
+  <button class="nav on" data-f="All">All tickets <span id="nAll"></span></button>
+  <button class="nav" data-f="Open">Open <span id="nOpen"></span></button>
+  <button class="nav" data-f="Progress">In progress <span id="nProgress"></span></button>
+  <button class="nav" data-f="Resolved">Resolved <span id="nResolved"></span></button>
+</aside>
+<section class="main">
+  <div class="top">
+    <div><h1>Support tickets</h1><p>Review requests, reply to requesters and update status.</p></div>
+    <div class="tools"><button class="btn" id="theme">Theme</button><button class="btn pri" id="newBtn">+ New ticket</button></div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-h"><h2>Ticket queue</h2><input id="q" placeholder="Search by subject or name" aria-label="Search tickets"></div>
+      <div class="tabs" id="tabs"></div>
+      <div class="tbl"><table><thead><tr><th>ID</th><th>Subject</th><th>Requester</th><th>Priority</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+    <div class="card" id="detail"></div>
+  </div>
+</section>
+</div>
+<dialog id="dlg">
+  <form id="form" method="dialog">
+    <h2>New ticket</h2>
+    <div class="f"><label for="fn">Requester name</label><input id="fn" required placeholder="e.g. Alex Johnson"></div>
+    <div class="f"><label for="fs">Issue summary</label><input id="fs" required placeholder="e.g. Server access denied"></div>
+    <div class="f"><label for="fp">Priority</label><select id="fp"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+    <div class="f"><label for="fd">Description</label><textarea id="fd" required placeholder="What happened, and what did you try?"></textarea></div>
+    <div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="cancel">Cancel</button><button class="btn pri" value="ok">Create ticket</button></div>
+  </form>
+</dialog>
+<div class="toast" id="toast"></div>
+<script>
+const SC={Open:'#5f93c0',Progress:'#b8913f',Resolved:'#4f9784'};
+const PC={Low:'#4f9784',Medium:'#b8913f',High:'#c4707c'};
+const LBL={Open:'Open',Progress:'In progress',Resolved:'Resolved'};
+const now=()=>new Date().toLocaleString([],{dateStyle:'medium',timeStyle:'short'});
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let n=1004,sel=null,filter='All';
+const T=[
+ {id:1001,name:'Sara Lim',sub:'VPN keeps disconnecting',pri:'High',st:'Open',desc:'VPN drops every 10 minutes while working from home.',t:now(),r:[{who:'Sara Lim',a:0,txt:'Happens on both Wi-Fi and mobile data.',t:now()}]},
+ {id:1002,name:'Daniel Tan',sub:'Printer offline on floor 3',pri:'Medium',st:'Progress',desc:'Printer shows offline for the whole team.',t:now(),r:[{who:'IT Support',a:1,txt:'Checking the print server now.',t:now()}]},
+ {id:1003,name:'Mei Chen',sub:'Reset email password',pri:'Low',st:'Resolved',desc:'Locked out of my mailbox after a password change.',t:now(),r:[{who:'IT Support',a:1,txt:'Password reset sent to your phone.',t:now()}]}
+];
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
+function counts(){
+ const c=s=>T.filter(t=>t.st===s).length;
+ const d=[['All','Total',T.length,'#5b6fb5'],['Open','Open',c('Open'),SC.Open],['Progress','In progress',c('Progress'),SC.Progress],['Resolved','Resolved',c('Resolved'),SC.Resolved]];
+ $('kpis').innerHTML=d.map(x=>`<div class="kpi" style="--k:${x[3]}"><small>${x[1]}</small><b>${x[2]}</b></div>`).join('');
+ d.forEach(x=>$('n'+x[0]).textContent=x[2]);
+ $('tabs').innerHTML=d.map(x=>`<button class="tab ${filter===x[0]?'on':''}" data-f="${x[0]}">${x[1]==='Total'?'All':x[1]} (${x[2]})</button>`).join('');
+ document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.f===filter));
+}
+function rows(){
+ const q=$('q').value.toLowerCase();
+ const r=T.filter(t=>(filter==='All'||t.st===filter)&&(t.sub+' '+t.name).toLowerCase().includes(q));
+ $('rows').innerHTML=r.length?r.map(t=>`<tr tabindex="0" data-id="${t.id}" class="${t.id===sel?'sel':''}"><td class="muted">#${t.id}</td><td><b>${esc(t.sub)}</b></td><td>${esc(t.name)}</td><td><span class="dot" style="--c:${PC[t.pri]}"></span>${t.pri}</td><td><span class="badge" style="--c:${SC[t.st]}">${LBL[t.st]}</span></td></tr>`).join(''):'<tr><td colspan="5" class="empty">No tickets match this view.</td></tr>';
+}
+function detail(){
+ const t=T.find(x=>x.id===sel);
+ if(!t){$('detail').innerHTML='<div class="empty"><h3>No ticket selected</h3>Choose a ticket from the queue to read the conversation and update its status.</div>';return}
+ $('detail').innerHTML=`<div class="card-h"><h2>#${t.id} · ${esc(t.sub)}</h2><span class="badge" style="--c:${SC[t.st]}">${LBL[t.st]}</span></div>
+ <div class="body">
+  <div class="meta"><div><small>Requester</small>${esc(t.name)}</div><div><small>Priority</small><span class="dot" style="--c:${PC[t.pri]}"></span>${t.pri}</div><div><small>Created</small>${t.t}</div><div><small>Replies</small>${t.r.length}</div></div>
+  <div class="desc">${esc(t.desc)}</div>
+  <h3>Conversation</h3>
+  <div class="stream">${t.r.length?t.r.map(m=>`<div class="msg ${m.a?'a':''}"><small>${esc(m.who)} · ${m.t}</small>${esc(m.txt)}</div>`).join(''):'<div class="muted" style="font-size:.85rem">No replies yet.</div>'}</div>
+  <div class="alert" id="alert"><b>This ticket is resolved.</b> Reopen it before adding a reply.</div>
+  <textarea id="reply" placeholder="Write a reply…" aria-label="Reply"></textarea>
+  <div class="row"><select id="stSel" aria-label="Change status">${Object.keys(LBL).map(k=>`<option value="${k}" ${k===t.st?'selected':''}>${LBL[k]}</option>`).join('')}</select><button class="btn pri" id="send">Send reply</button></div>
+ </div>`;
+ $('send').onclick=()=>{
+  const v=$('reply').value.trim();
+  if(t.st==='Resolved'){$('alert').style.display='block';return}
+  if(!v){toast('Write a reply first');return}
+  t.r.push({who:'IT Support',a:1,txt:v,t:now()});all();toast('Reply sent')};
+ $('stSel').onchange=e=>{t.st=e.target.value;all();toast('Status set to '+LBL[t.st])};
+}
+function all(){counts();rows();detail()}
+function setF(e){const b=e.target.closest('[data-f]');if(b){filter=b.dataset.f;all()}}
+$('tabs').onclick=setF;document.querySelector('aside').onclick=setF;
+$('rows').onclick=e=>{const r=e.target.closest('tr[data-id]');if(r){sel=+r.dataset.id;all()}};
+$('rows').onkeydown=e=>{if(e.key==='Enter'){const r=e.target.closest('tr[data-id]');if(r){sel=+r.dataset.id;all()}}};
+$('q').oninput=rows;
+$('newBtn').onclick=()=>$('dlg').showModal();
+$('cancel').onclick=()=>$('dlg').close();
+$('form').onsubmit=e=>{
+ T.unshift({id:n++,name:$('fn').value.trim(),sub:$('fs').value.trim(),pri:$('fp').value,st:'Open',desc:$('fd').value.trim(),t:now(),r:[]});
+ sel=T[0].id;filter='All';e.target.reset();$('fp').value='Medium';all();toast('Ticket #'+sel+' created')};
+$('theme').onclick=()=>{const r=document.documentElement;const d=r.dataset.theme==='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=d?'light':'dark'};
+all();
+</script>
+</body>
+</html>
